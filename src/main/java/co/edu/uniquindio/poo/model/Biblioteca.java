@@ -2,23 +2,22 @@ package co.edu.uniquindio.poo.model;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.LinkedList;
 
 public class Biblioteca {
     private String nombre;
-    private Estudiante[] listaEstudiantes = new Estudiante[10];
-    private Libro[] listaLibros = new Libro[10];
-    private Prestamo[] listaPrestamos = new Prestamo[10];
-    private Empleado[] listaEmpleados = new Empleado[10];
+    private LinkedList<Estudiante> listaEstudiantes;
+    private LinkedList<Libro> listaLibros;
+    private LinkedList<Prestamo> listaPrestamos; 
+    private LinkedList<Empleado> listaEmpleados;
 
 
     public Biblioteca(String nombre){
         this.nombre=nombre;
-        this.listaEstudiantes = new Estudiante[10];
-        this.listaLibros = new Libro[10];
-        this.listaPrestamos = new Prestamo[10];
-        this.listaEmpleados = new Empleado[10];
+        this.listaEstudiantes = new LinkedList<>();
+        this.listaLibros = new LinkedList<>();
+        this.listaPrestamos = new LinkedList<>();
+        this.listaEmpleados = new LinkedList<>();
     }
 
     /**
@@ -34,113 +33,88 @@ public class Biblioteca {
     }
 
 
-    public Persona[] getListaEstudiantes() {
+    public LinkedList<Estudiante> getListaEstudiantes() {
         return listaEstudiantes;
     }
 
 
-    public void setListaEstudiantes (Estudiante[] listaEstudiantes) {
+    public void setListaEstudiantes (LinkedList<Estudiante> listaEstudiantes) {
         this.listaEstudiantes = listaEstudiantes;
     }
 
 
-    public Libro[] getListaLibros() {
+    public LinkedList<Libro> getListaLibros() {
         return listaLibros;
     }
 
 
-    public void setListaLibros(Libro[] listaLibros) {
+    public void setListaLibros(LinkedList<Libro> listaLibros) {
         this.listaLibros = listaLibros;
     }
 
 
-    public Prestamo[] getListaPrestamos() {
+    public LinkedList<Prestamo> getListaPrestamos() {
         return listaPrestamos;
     }
 
 
-    public void setListaPrestamos(Prestamo[] listaPrestamos) {
+    public void setListaPrestamos(LinkedList<Prestamo> listaPrestamos) {
         this.listaPrestamos = listaPrestamos;
     }
 
 
-    public Empleado[] getListaEmpleados() {
+    public LinkedList<Empleado> getListaEmpleados() {
         return listaEmpleados;
     }
 
+    public void agregarLibros(LinkedList<Libro> listaLibros) {
+        this.listaLibros.addAll(listaLibros); 
+    }
 
-    public void setListaEmpleados(Empleado[] listaEmpleados) {
+
+    public void setListaEmpleados(LinkedList<Empleado> listaEmpleados) {
         this.listaEmpleados = listaEmpleados;
     }
 
+    
     @Override
     public String toString() {
-        return "Biblioteca [nombre=" + nombre + ", listaEstudiantes=" + Arrays.toString(listaEstudiantes)
-                + ", listaLibros=" + Arrays.toString(listaLibros) + ", listaPrestamos="
-                + Arrays.toString(listaPrestamos) + ", listaEmpleados=" + Arrays.toString(listaEmpleados) + "]";
+        return "Biblioteca [nombre=" + nombre + ", listaEstudiantes=" + listaEstudiantes + ", listaLibros="
+                + listaLibros + ", listaPrestamos=" + listaPrestamos + ", listaEmpleados=" + listaEmpleados + "]";
     }
 
     /**
      * metodo para crear un libro
      */
-    public String agregarLibro(Libro nuevoLibro){
-        String mensaje = "";
-        int posicionDisponible = 0;
-        Libro libroEncontrado = null;
+    public boolean agregarLibro(Libro nuevoLibro){
+        listaLibros = new LinkedList<>();
 
-        posicionDisponible = buscarPosicionDisponible();
-
-        if (posicionDisponible == -1) {
-            mensaje = "\nNo hay espacio para un nuevo Libro.";
-            return mensaje;
-        } else {
-            libroEncontrado = buscarLibro(nuevoLibro.getTitulo(), nuevoLibro.getCodigo());
-
-            if (libroEncontrado != null) {
-                mensaje = "\nEl contacto ya se encuentra registrado.";
-            } else {
-                listaLibros[posicionDisponible] = nuevoLibro;
-                mensaje = "\nEl contacto se a almacenado exitosamente.";
+        for (Libro libro : listaLibros) {
+            if (libro.getTitulo().equals(nuevoLibro.getTitulo()) && 
+                libro.getCodigo().equals(nuevoLibro.getCodigo())){
+                return false;
             }
         }
-
-        return mensaje;
-    }
-
-    /**
-     * metodo para buscar una posicion disponible
-     */
-    private int buscarPosicionDisponible() {
-        int posicionDisponible = -1;
-
-        for (int i = 0; i < listaLibros.length; i++) {
-            Libro libro = listaLibros[i];
-            if (libro == null) {
-                posicionDisponible = i;
-                return posicionDisponible;
-            }
-        }
-
-        return posicionDisponible;
+        listaLibros.add(nuevoLibro);
+        return true;
     }
     
     /**
      * metodo para buscar un libro
      */
-    public Libro buscarLibro(String titulo, String codigo) {
-        Libro libroEncontrado = null;
-
-        for (int i = 0; i < listaLibros.length; i++) {
-            Libro libroAux = listaLibros[i];
-            if (libroAux != null) {
-                if (libroAux.getTitulo().equals(titulo) && libroAux.getCodigo().equals(codigo)) {
-                    libroEncontrado = libroAux;
-                    return libroEncontrado;
-                }
+    public Libro buscarLibro(String codigo, String titulo) {
+        if (listaLibros == null || listaLibros.isEmpty()) {
+            return null; 
+        }
+    
+        for (Libro libroAux : listaLibros) {  
+            if (libroAux != null &&
+                codigo != null && codigo.equals(libroAux.getCodigo()) && titulo != null && titulo.equals(libroAux.getTitulo())) {
+                return libroAux;  
             }
         }
-
-        return libroEncontrado;
+    
+        return null; 
     }
 
     /**
@@ -148,7 +122,7 @@ public class Biblioteca {
      */
     public String actualizarLibro(String titulo, String codigo, String isbn, String autor, String editorial, LocalDate fecha, byte unidadesDisponibles) {
         String mensaje = "\nEl Libro no se encuentra registrado.";
-        Libro libroEncontrado = buscarLibro(titulo, codigo);
+        Libro libroEncontrado = buscarLibro(codigo, titulo);
         if (libroEncontrado != null) {
             libroEncontrado.setTitulo(titulo);
             libroEncontrado.setCodigo(codigo);
@@ -170,11 +144,11 @@ public class Biblioteca {
     public String eliminarLibro(String titulo, String codigo) {
         String mensaje = "\nEl libro no existe.";
 
-        for (int i = 0; i < listaLibros.length; i++) {
-            Libro libroAux = listaLibros[i];
+        for (int i = 0; i < listaLibros.size(); i++) {
+            Libro libroAux = listaLibros.get(i);
             if (listaLibros != null) {
                 if (libroAux.getTitulo().equals(titulo) && libroAux.getCodigo().equals(codigo)) {
-                    listaLibros[i] = null;
+                    listaLibros.remove(i);
                     mensaje = "\nEl libro ha sido eliminado correctamente.";
                     return mensaje;
                 }                
@@ -186,44 +160,17 @@ public class Biblioteca {
      /**
      * metodo para agregar un Empleado
      */
-    public String agregarEmpleado(Empleado nuevoEmpleado){
-        String mensaje = "";
-        int posicionDisponible = 0;
-        Empleado empleadoEncontrado = null;
+    public boolean agregarEmpleado(Empleado nuevoEmpleado){
+        listaEmpleados = new LinkedList<>();
 
-        posicionDisponible = buscarPosicionDisponibleEmpleado();
-
-        if (posicionDisponible == -1) {
-            mensaje = "\nNo hay espacio para un nuevo empleado.";
-            return mensaje;
-        } else {
-            empleadoEncontrado = buscarEmpleado(nuevoEmpleado.getNombre(), nuevoEmpleado.getCedula());
-
-            if (empleadoEncontrado != null) {
-                mensaje = "\nEl empleado ya se encuentra registrado.";
-            } else {
-                listaEmpleados[posicionDisponible] = nuevoEmpleado;
-                mensaje = "\nEl empleado se a almacenado exitosamente.";
+        for (Empleado empleado : listaEmpleados) {
+            if (empleado.getNombre().equals(nuevoEmpleado.getNombre()) && 
+                empleado.getCedula().equals(nuevoEmpleado.getCedula())){
+                return false;
             }
         }
-        return mensaje;
-    }
-
-    /**
-     * metodo para buscar una posicion disponible
-     */
-    private int buscarPosicionDisponibleEmpleado() {
-        int posicionDisponible = -1;
-
-        for (int i = 0; i < listaEmpleados.length; i++) {
-            Empleado empleado = listaEmpleados[i];
-            if (empleado == null) {
-                posicionDisponible = i;
-                return posicionDisponible;
-            }
-        }
-
-        return posicionDisponible;
+        listaEmpleados.add(nuevoEmpleado);
+        return true;
     }
     
     /**
@@ -232,8 +179,8 @@ public class Biblioteca {
     public Empleado buscarEmpleado(String nombre, String cedula) {
         Empleado empleadoEncontrado = null;
 
-        for (int i = 0; i < listaEmpleados.length; i++) {
-            Empleado empleadoAux = listaEmpleados[i];
+        for (int i = 0; i < listaEmpleados.size(); i++) {
+            Empleado empleadoAux = listaEmpleados.get(i);
             if (empleadoAux != null) {
                 if (empleadoAux.getNombre().equals(nombre) && empleadoAux.getCedula().equals(cedula)) {
                     empleadoEncontrado = empleadoAux;
@@ -247,7 +194,7 @@ public class Biblioteca {
     /**
      * metodo para actualizar un empleado
      */
-    public String actualizarEmpleado(String nombre, String cedula, String telefono, String correo, Double salario) {
+    public String actualizarEmpleado(String nombre, String cedula, String telefono, String correo, int salario) {
         String mensaje = "\nEl empleado no se encuentra registrado.";
         Empleado empleadoEncontrado = buscarEmpleado(nombre, cedula);
         if (empleadoEncontrado != null) {
@@ -268,11 +215,11 @@ public class Biblioteca {
     public String eliminarEmpleado(String nombre, String cedula) {
         String mensaje = "\nEl empleado no existe.";
 
-        for (int i = 0; i < listaEmpleados.length; i++) {
-            Empleado empleadoAux = listaEmpleados[i];
+        for (int i = 0; i < listaEmpleados.size(); i++) {
+            Empleado empleadoAux = listaEmpleados.get(i);
             if (listaEmpleados != null) {
                 if (empleadoAux.getNombre().equals(nombre) && empleadoAux.getCedula().equals(cedula)) {
-                    listaEmpleados[i] = null;
+                    listaEmpleados.remove(i);
                     mensaje = "\nEl empleado ha sido eliminado correctamente.";
                     return mensaje;
                 }                
@@ -284,53 +231,27 @@ public class Biblioteca {
      /**
      * metodo para crear un estudiante
      */
-    public String agregarEstudiante(Estudiante nuevoEstudiante){
-        String mensaje = "";
-        int posicionDisponible = 0;
-        Estudiante estudianteEncontrado = null;
+    public boolean agregarEstudiante(Estudiante nuevoEstudiante){
+        listaEstudiantes = new LinkedList<>();
 
-        posicionDisponible = buscarPosicionDisponibleEstudiante();
-
-        if (posicionDisponible == -1) {
-            mensaje = "\nNo hay espacio para un nuevo estudiante.";
-            return mensaje;
-        } else {
-            estudianteEncontrado = buscarEstudiante(nuevoEstudiante.getNombre(), nuevoEstudiante.getCedula());
-
-            if (estudianteEncontrado != null) {
-                mensaje = "\nEl estudiante ya se encuentra registrado.";
-            } else {
-                listaEstudiantes[posicionDisponible] = nuevoEstudiante;
-                mensaje = "\nEl estudiante se a almacenado exitosamente.";
+        for (Estudiante estudiante : listaEstudiantes) {
+            if (estudiante.getNombre().equals(nuevoEstudiante.getNombre()) && 
+                estudiante.getCedula().equals(nuevoEstudiante.getCedula())){
+                return false;
             }
         }
-        return mensaje;
+        listaEstudiantes.add(nuevoEstudiante);
+        return true;
     }
 
-    /**
-     * metodo para buscar una posicion disponible
-     */
-    private int buscarPosicionDisponibleEstudiante() {
-        int posicionDisponible = -1;
-
-        for (int i = 0; i < listaEstudiantes.length; i++) {
-            Estudiante estudiante = listaEstudiantes[i];
-            if (estudiante == null) {
-                posicionDisponible = i;
-                return posicionDisponible;
-            }
-        }
-        return posicionDisponible;
-    }
-    
     /**
      * metodo para buscar un estudiante 
      */
     public Estudiante buscarEstudiante(String nombre, String cedula) {
         Estudiante estudianteEncontrado = null;
 
-        for (int i = 0; i < listaEstudiantes.length; i++) {
-            Estudiante estudianteAux = listaEstudiantes[i];
+        for (int i = 0; i < listaEstudiantes.size(); i++) {
+            Estudiante estudianteAux = listaEstudiantes.get(i);
             if (estudianteAux != null) {
                 if (estudianteAux.getNombre().equals(nombre) && estudianteAux.getCedula().equals(cedula)) {
                     estudianteEncontrado = estudianteAux;
@@ -364,11 +285,11 @@ public class Biblioteca {
     public String eliminarEstudiante(String nombre, String cedula) {
         String mensaje = "\nEl estudiante no existe.";
 
-        for (int i = 0; i < listaEstudiantes.length; i++) {
-            Estudiante estudianteAux = listaEstudiantes[i];
+        for (int i = 0; i < listaEstudiantes.size(); i++) {
+            Estudiante estudianteAux = listaEstudiantes.get(i);
             if (listaEstudiantes != null) {
                 if (estudianteAux.getNombre().equals(nombre) && estudianteAux.getCedula().equals(cedula)) {
-                    listaEstudiantes[i] = null;
+                    listaEstudiantes.remove(i);
                     mensaje = "\nEl estudiante ha sido eliminado correctamente.";
                     return mensaje;
                 }                
@@ -380,43 +301,16 @@ public class Biblioteca {
       /**
      * metodo para crear un prestamo
      */
-    public String agergarPrestamo(Prestamo nuevoPrestamo){
-        String mensaje = "";
-        int posicionDisponible = 0;
-        Prestamo prestamoEncontrado = null;
+    public boolean agergarPrestamo(Prestamo nuevoPrestamo){
+        listaPrestamos = new LinkedList<>();
 
-        posicionDisponible = buscarPosicionDisponiblePrestamo();
-
-        if (posicionDisponible == -1) {
-            mensaje = "\nNo hay espacio para un nuevo prestamo.";
-            return mensaje;
-        } else {
-            prestamoEncontrado = buscarPrestamo(nuevoPrestamo.getFechaEntrega(), nuevoPrestamo.getFechaPrestamo());
-
-            if (prestamoEncontrado != null) {
-                mensaje = "\nEl prestamo ya se encuentra registrado.";
-            } else {
-                listaPrestamos[posicionDisponible] = nuevoPrestamo;
-                mensaje = "\nEl prestamo se a almacenado exitosamente.";
+        for (Prestamo prestamo : listaPrestamos) {
+            if (prestamo.getCodigo().equals(nuevoPrestamo.getCodigo())){
+                return false;
             }
         }
-        return mensaje;
-    }
-
-    /**
-     * metodo para buscar una posicion disponible
-     */
-    private int buscarPosicionDisponiblePrestamo() {
-        int posicionDisponible = -1;
-
-        for (int i = 0; i < listaPrestamos.length; i++) {
-            Prestamo prestamo = listaPrestamos[i];
-            if (prestamo == null) {
-                posicionDisponible = i;
-                return posicionDisponible;
-            }
-        }
-        return posicionDisponible;
+        listaPrestamos.add(nuevoPrestamo);
+        return true;
     }
     
     /**
@@ -425,8 +319,8 @@ public class Biblioteca {
     public Prestamo buscarPrestamo(LocalDate fechaEntrega, LocalDate fechaPrestamo) {
         Prestamo prestamoEncontrado = null;
 
-        for (int i = 0; i < listaPrestamos.length; i++) {
-            Prestamo prestamoAux = listaPrestamos[i];
+        for (int i = 0; i < listaPrestamos.size(); i++) {
+            Prestamo prestamoAux = listaPrestamos.get(i);
             if (prestamoAux != null) {
                 if (prestamoAux.getFechaPrestamo().equals(fechaPrestamo) && prestamoAux.getFechaEntrega().equals(fechaEntrega)) {
                     prestamoEncontrado = prestamoAux;
@@ -440,7 +334,7 @@ public class Biblioteca {
     /**
      * metodo para actualizar un prestamo
      */
-    public String actualizarPrestamo(Double costo, LocalDate fechaPrestamo, LocalDate fechaEntrega) {
+    public String actualizarPrestamo(int costo, LocalDate fechaPrestamo, LocalDate fechaEntrega) {
         String mensaje = "\nEl prestamo no se encuentra registrado.";
         Prestamo prestamoEncontrado = buscarPrestamo(fechaPrestamo, fechaEntrega);
         if (prestamoEncontrado != null) {
@@ -459,11 +353,11 @@ public class Biblioteca {
     public String eliminarPrestamo(LocalDate fechaEntrega, LocalDate fechaPrestamo) {
         String mensaje = "\nEl prestamo no existe.";
 
-        for (int i = 0; i < listaPrestamos.length; i++) {
-            Prestamo prestamoAux = listaPrestamos[i];
+        for (int i = 0; i < listaPrestamos.size(); i++) {
+            Prestamo prestamoAux = listaPrestamos.get(i);
             if (listaPrestamos != null) {
                 if (prestamoAux.getFechaEntrega().equals(fechaEntrega) && prestamoAux.getFechaPrestamo().equals(fechaPrestamo)) {
-                    listaPrestamos[i] = null;
+                    listaPrestamos.remove(i);
                     mensaje = "\nEl prestamo ha sido eliminado correctamente.";
                     return mensaje;
                 }                
@@ -476,8 +370,8 @@ public class Biblioteca {
      * metodo para consultar los datos de un libro dado su codigo
      */
     public String consultarDatosLibro(String codigo){
-        for(int i = 0; i < listaLibros.length; i++){
-            Libro libroAux=listaLibros[i];
+        for(int i = 0; i < listaLibros.size(); i++){
+            Libro libroAux=listaLibros.get(i);
             if(libroAux.getCodigo().equals(codigo)){
                 return "Código: " + libroAux.getCodigo() +
                    ", Título: " + libroAux.getTitulo() +
@@ -494,28 +388,30 @@ public class Biblioteca {
      * metodo para consultar la cantidad de prestamos a la que esta asociada un libro dado su nombre
      */
     public int cantidadDePrestamosLibro(String titulo){
-        int cantidadPrestamos = 0;
-        for(int i = 0; i < listaPrestamos.length; i++){
-            Prestamo prestamoAux = listaPrestamos[i];
-            for(Libro libro : prestamoAux.getListaLibros()){
-                if(libro.getTitulo().equals(titulo)){
-                    cantidadPrestamos++;
-                }
+        int contador = 0;
+
+        for (Prestamo prestamo : listaPrestamos) {
+            if (prestamo.getLibro().getTitulo().equals(titulo)){
+                contador++;  
             }
         }
-        return cantidadPrestamos;
+        return contador; 
     }
 
     /**
     * metodo para consultar los datos de un prestamo dado su codigo
     */
     public String consultarDatosPrestamo(String codigo){
-        for(int i = 0; i < listaPrestamos.length; i++){
-            Prestamo prestamoAux=listaPrestamos[i];
+        for(int i = 0; i < listaPrestamos.size(); i++){
+            Prestamo prestamoAux=listaPrestamos.get(i);
             if(prestamoAux.getCodigo().equals(codigo)){
-                return "Código: " + prestamoAux.getCosto() +
-                   ", Título: " + prestamoAux.getFechaEntrega() +
-                   ", Autor: " + prestamoAux.getFechaPrestamo();
+                return "Código: " + prestamoAux.getCodigo() +
+                   ", costo: " + prestamoAux.getCosto() +
+                   ", fecha de prestamo: " + prestamoAux.getFechaPrestamo() +
+                   ", fecha de entrega: " + prestamoAux.getFechaEntrega() +
+                   ", empleado: " + prestamoAux.getEmpleado() + 
+                   ", estudiante: " + prestamoAux.getEstudiante() +
+                   ", libro: " + prestamoAux.getLibro();
             }
         }
         return "libro no encontrado";
@@ -524,32 +420,13 @@ public class Biblioteca {
     /**
      * metodo para reemplazar un libro
      */
-    public boolean reemplazarLibro(String titulo, Libro nuevoLibro) {
-        for (int i = 0; i < listaLibros.length; i++) {
-            if (listaLibros[i].getTitulo().equals(titulo)) {
-                listaLibros[i] = nuevoLibro; 
-                return true; 
+    public Libro reemplazarLibro(String titulo, Libro nuevoLibro) {
+        for (int i = 0; i < listaLibros.size(); i++) {
+            if (listaLibros.get(i).getTitulo().equals(titulo)) {
+                listaLibros.set(i, nuevoLibro); 
             }
         }
-        return false; 
-    }
-
-    /**
-     * metodo para entregar le prestamo
-     */
-    public void entregarPrestamo(LocalDate fechaEntrega, LocalDate fechaPrestamo, Libro libro, Prestamo prestamo){
-
-        long diasPrestamo = ChronoUnit.DAYS.between(fechaPrestamo, fechaEntrega);
-
-        double costoPorDia = prestamo.getCosto();
-        double costoTotal = diasPrestamo * costoPorDia;
-
-        System.out.println("Libro entregado: " + libro.getTitulo());
-        System.out.println("Fecha de préstamo: " + fechaPrestamo);
-        System.out.println("Fecha de entrega: " + fechaEntrega);
-        System.out.println("Días prestado: " + diasPrestamo);
-        System.out.println("Costo por día: $" + costoPorDia);
-        System.out.println("Costo total del préstamo: $" + costoTotal);
+        return nuevoLibro;
     }
 
     /**
@@ -571,8 +448,8 @@ public class Biblioteca {
      * metodo que muestra la cantidad de prestamos hechos por cada empleado
      */
     public void mostrarCantidadPrestamosPorEmpleado() {
-        ArrayList<Empleado> empleados = new ArrayList<>();
-        ArrayList<Integer> contadorPrestamos = new ArrayList<>();
+        LinkedList<Empleado> empleados = new LinkedList<>();
+        LinkedList<Integer> contadorPrestamos = new LinkedList<>();
 
         for (Prestamo prestamo : listaPrestamos) {
             Empleado empleado = prestamo.getEmpleado();
@@ -586,7 +463,6 @@ public class Biblioteca {
             }
         }
 
-        // Mostrar resultados
         System.out.println("Cantidad de préstamos realizados por cada empleado:");
         for (int i = 0; i < empleados.size(); i++) {
             System.out.println(empleados.get(i) + ": " + contadorPrestamos.get(i) + " préstamos");
@@ -596,34 +472,25 @@ public class Biblioteca {
     /**
      * metodo para mostrar el estudiante con mas prestamos
      */
-    public void estudianteConMasPrestamos(){
-    ArrayList<Estudiante> estudiantes = new ArrayList<>();
-        ArrayList<Integer> contadorPrestamos = new ArrayList<>();
+    public Estudiante estudianteConMasPrestamos(){
+        Estudiante estudianteConMasPrestamos = null;
+        int maxPrestamos=0;
+        for (Prestamo prestamo : listaPrestamos){
+            Estudiante estudianteActual = prestamo.getEstudiante();
+            int conteoPrestamos=0;
 
-        Prestamo[] prestamos;
-        for (Prestamo prestamo : prestamos) {
-            Estudiante estudiante = prestamo.getEstudiante();
-            int index = estudiantes.indexOf(estudiante);
+            for(Prestamo prestamoAux : listaPrestamos){
+                if(prestamoAux.getEstudiante().equals(estudianteActual)){
+                    conteoPrestamos++;
+                }
+            }
 
-            if (index == -1) {
-                estudiantes.add(estudiante);
-                contadorPrestamos.add(1); 
-            } else {
-                contadorPrestamos.set(index, contadorPrestamos.get(index) + 1);
+            if(conteoPrestamos > maxPrestamos){
+                maxPrestamos = conteoPrestamos;
+                estudianteConMasPrestamos = estudianteActual;
             }
         }
-
-        int maxPrestamos = 0;
-        int indexMax = 0;
-
-        for (int i = 0; i < contadorPrestamos.size(); i++) {
-            if (contadorPrestamos.get(i) > maxPrestamos) {
-                maxPrestamos = contadorPrestamos.get(i);
-                indexMax = i;
-            }
-        }
-        System.out.println("Estudiante con más préstamos: " + estudiantes.get(indexMax));
-        System.out.println("Número de préstamos: " + maxPrestamos);
+        return estudianteConMasPrestamos;
     }
 
     /**
@@ -631,12 +498,12 @@ public class Biblioteca {
      */
     public double calcularTotalAPagarABibliotecarios() {
         double totalAPagar = 0.0;
-        ArrayList<Empleado> empleados = new ArrayList<>();
-        ArrayList<Double> ganancias = new ArrayList<>();
+        LinkedList<Empleado> empleados = new LinkedList<>();
+        LinkedList<Double> ganancias = new LinkedList<>();
 
         for (Prestamo prestamo : getListaPrestamos()) {
             Empleado empleado = prestamo.getEmpleado();
-            double costoPorDia = prestamo.getLibro().getCosto(); 
+            double costoPorDia = prestamo.getCosto(); 
             long diasPrestamo = ChronoUnit.DAYS.between(prestamo.getFechaPrestamo(), prestamo.getFechaEntrega());
             double gananciaPorPrestamo = costoPorDia * diasPrestamo * 0.2; 
 

@@ -4,6 +4,10 @@ public class Persona {
     private String nombre, cedula, telefono, correo;
 
     public Persona(String nombre, String cedula, String telefono, String correo){
+        assert nombre != null && !nombre.isBlank();
+        assert cedula != null && !cedula.isBlank();
+        assert telefono != null && !telefono.isBlank();
+        assert correo != null && !correo.isBlank();
         this.nombre=nombre;
         this.cedula=cedula;
         this.telefono=telefono;

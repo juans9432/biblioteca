@@ -1,29 +1,40 @@
 package co.edu.uniquindio.poo.model;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class Prestamo {
-    private Double costo;
+    private int costo;
     private String codigo;
     private LocalDate fechaEntrega;
     private LocalDate fechaPrestamo;
-    private Libro[] listaLibros = new Libro[10];
+    private Estudiante estudiante;
+    private Empleado empleado;
+    private Libro libro;
+    
 
-    public Prestamo(Double costo, String codigo, LocalDate fechaEntrega, LocalDate fechaPrestamo, EstadoLibro estado){
+    public Prestamo(int costo, String codigo, LocalDate fechaEntrega, LocalDate fechaPrestamo, Estudiante estudiante, Empleado empleado, Libro libro ){
+        assert costo >= 0;
+        assert codigo != null && !codigo.isBlank();
+        assert fechaEntrega != null;
+        assert fechaPrestamo != null;
         this.costo=costo;
         this.codigo=codigo;
         this.fechaEntrega=fechaEntrega;
         this.fechaPrestamo=fechaPrestamo;
-        this.listaLibros = new Libro[10];
+        this.estudiante=estudiante;
+        this.empleado=empleado;
+        this.libro=libro;
     }
 
-    
-
-    public Double getCosto() {
+    /**
+     * metodos get y set 
+     */
+    public int getCosto() {
         return costo;
     }
 
-    public void setCosto(Double costo) {
+    public void setCosto( int costo) {
         this.costo = costo;
     }
     
@@ -51,80 +62,59 @@ public class Prestamo {
         this.fechaPrestamo = fechaPrestamo;
     }
 
-    public Libro[] getListaLibros() {
-        return listaLibros;
+    public Estudiante getEstudiante(){
+        return estudiante;
     }
 
-    public void setListaLibros(Libro[] listaLibros) {
-        this.listaLibros = listaLibros;
+    public Empleado getEmpleado(){
+        return empleado;
     }
 
-    /**
-     * metodo para agregar libro al prestamo
-     */
-    public String agregarLibroPrestamo(String titulo, String codigo, Biblioteca todosLosLibros){
-        String mensaje = "";
-        int posicionDisponible = 0;
-        Libro libroEncontrado = null;
-
-        posicionDisponible = buscarPosicionDisponiblePrestamo();
-
-        if (posicionDisponible == -1) {
-            mensaje = "No hay espacio para un nuevo contacto.";
-            return mensaje;
-        } else {
-            libroEncontrado = buscarLibro(titulo, codigo);
-
-            if (libroEncontrado != null) {
-                mensaje = "El contacto ya se encuentra registrado.";
-            } else {
-                libroEncontrado = todosLosLibros.buscarLibro(titulo, codigo);
-                if(libroEncontrado == null){
-                    mensaje = "El contacto que intenta ingresar no existe.";
-                }else{
-                    listaLibros[posicionDisponible] = libroEncontrado;
-                    mensaje = "El contacto se a almacenado exitosamente.";
-                }
-            }         
-        }
-        return mensaje;
+    public Libro getLibro(){
+        return libro;
     }
 
     /**
-     * metodo para buscar un libro
+     * metodo para asignar un estudiante 
+     * @param estudiante
      */
-    public Libro buscarLibro(String titulo, String codigo) {
-        Libro libroEncontrado = null;
-
-        for (int i = 0; i < listaLibros.length; i++) {
-            Libro libroAux = listaLibros[i];
-            if (libroAux != null) {
-                if (libroAux.getTitulo().equals(titulo) && libroAux.getCodigo().equals(codigo)) {
-                    libroEncontrado = libroAux;
-                    return libroEncontrado;
-                }
-            }
-        }
-        return libroEncontrado;
+    public void asignarEstudiante(Estudiante estudiante){
+        this.estudiante=estudiante;
     }
 
-     /*
-     * Este método busca una posición disponible y la retorna, en caso de no haber,
-     * retorna -1.
+    /**
+     * metodo para asignar un libro 
+     * @param libro
      */
-    private int buscarPosicionDisponiblePrestamo() {
-        int posicionDisponible = -1;
-
-        for (int i = 0; i < listaLibros.length; i++) {
-            Libro libro = listaLibros[i];
-            if (libro == null) {
-                posicionDisponible = i;
-                return posicionDisponible;
-            }
-        }
-        return posicionDisponible;
+    public void asignarLibro(Libro libro){
+        this.libro=libro;
     }
 
+    /**
+     * metodo para asignar un empleado
+     */
+    public void asignarEmpleado(Empleado empleado){
+        this.empleado=empleado;
+    }
 
+    /**
+     * metodo para entregar el prestamo
+     */
+    public void entregarPrestamo(LocalDate fechaEntrega, LocalDate fechaPrestamo, Libro libro, Prestamo prestamo){
+
+        long diasPrestamo = ChronoUnit.DAYS.between(fechaPrestamo, fechaEntrega);
+
+        double costoPorDia = prestamo.getCosto();
+        double costoTotal = diasPrestamo * costoPorDia;
+
+        System.out.println("Libro entregado: " + libro.getTitulo());
+        System.out.println("Fecha de préstamo: " + fechaPrestamo);
+        System.out.println("Fecha de entrega: " + fechaEntrega);
+        System.out.println("Días prestado: " + diasPrestamo);
+        System.out.println("Costo por día: $" + costoPorDia);
+        System.out.println("Costo total del préstamo: $" + costoTotal);
+    }
+
+    
 
 }

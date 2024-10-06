@@ -5,6 +5,8 @@ public class DetallePrestamo {
     private int cantidad;
 
     public DetallePrestamo(Double subtotal,int cantidad){
+        assert subtotal > 0;
+        assert cantidad > 0;
         this.subtotal=subtotal;
         this.cantidad=cantidad;
     }

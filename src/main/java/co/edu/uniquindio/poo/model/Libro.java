@@ -5,10 +5,17 @@ import java.time.LocalDate;
 public class Libro {
     private String titulo, codigo, isbn, autor, editorial;
     private LocalDate fecha;
-    private Byte unidadesDisponibles;
-    private EstadoLibro estado;
+    private int unidadesDisponibles;
+    private EstadoLibro estadoLibro;
 
-    public Libro(String titulo, String codigo, String isbn, String autor, String editorial, LocalDate fecha, byte unidadesDisponibles, EstadoLibro estado){
+    public Libro(String titulo, String codigo, String isbn, String autor, String editorial, LocalDate fecha, int unidadesDisponibles, EstadoLibro estadoLibro){
+        assert titulo != null && !titulo.isBlank();
+        assert codigo != null && !codigo.isBlank();
+        assert isbn != null && !isbn.isBlank();
+        assert autor != null && !autor.isBlank();
+        assert editorial != null && !editorial.isBlank();
+        assert fecha != null;
+        assert unidadesDisponibles >= 0;
         this.titulo=titulo;
         this.codigo=codigo;
         this.isbn=isbn;
@@ -16,7 +23,7 @@ public class Libro {
         this.editorial=editorial;
         this.fecha=fecha;
         this.unidadesDisponibles=unidadesDisponibles;
-        this.estado=estado;
+        this.estadoLibro=estadoLibro;
     }
 
     public String getTitulo() {
@@ -67,7 +74,7 @@ public class Libro {
         this.fecha = fecha;
     }
 
-    public Byte getUnidadesDisponibles() {
+    public int getUnidadesDisponibles() {
         return unidadesDisponibles;
     }
 
@@ -75,12 +82,15 @@ public class Libro {
         this.unidadesDisponibles = unidadesDisponibles;
     }
 
-    public EstadoLibro getEstado() {
-        return estado;
+    public EstadoLibro getEstadoLibro() {
+        return estadoLibro;
     }
 
-    public void setEstado(EstadoLibro estado) {
-        this.estado = estado;
+    @Override
+    public String toString() {
+        return "Libro [titulo=" + titulo + ", codigo=" + codigo + ", isbn=" + isbn + ", autor=" + autor + ", editorial="
+                + editorial + ", fecha=" + fecha + ", unidadesDisponibles=" + unidadesDisponibles + ", estadoLibro="
+                + estadoLibro + "]";
     }
 
     /**
@@ -90,7 +100,7 @@ public class Libro {
         if(unidadesDisponibles > 0){
             unidadesDisponibles--;
             if(unidadesDisponibles == 0){
-                estado=EstadoLibro.OCUPADO;
+                estadoLibro=EstadoLibro.OCUPADO;
             }
         }else{
             System.out.println("no hay mas unidades disponibles");
