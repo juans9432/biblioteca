@@ -26,6 +26,10 @@ public class Libro {
         this.estadoLibro=estadoLibro;
     }
 
+    /**
+     * metodos get and set 
+     * @return
+     */
     public String getTitulo() {
         return titulo;
     }

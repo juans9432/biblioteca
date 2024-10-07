@@ -44,7 +44,7 @@ public class LibroTest {
      * test para verificar que los datos de un libro no sean nulos
      */
     @Test
-    public void datosNulosEmpleado(){
+    public void datosNulosLibro(){
         LOG.info("iniciando test datos nulos");
         assertThrows(Throwable.class, ()-> new Libro(null, null, null, null, null, null, 0, null));
         LOG.info("finalizando test datos nulos");

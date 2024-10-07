@@ -13,7 +13,7 @@ public class PersonaTest {
     private static final  Logger LOG = Logger.getLogger(PersonaTest.class.getName());
 
     /**
-     * test para verificar que los datos de un test no sean nulos
+     * test para verificar que los datos de una persona no sean nulos
      */
     @Test
     public void datosNulosPersona(){
@@ -23,7 +23,7 @@ public class PersonaTest {
     }
 
     /**
-     * test para  verificar que los datos de un empleado no esten vacios
+     * test para  verificar que los datos de una persona no esten vacios
      */
     @Test
     public void datosVaciosPersona(){

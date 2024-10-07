@@ -14,20 +14,20 @@ public class EstudianteTest {
     private static final  Logger LOG = Logger.getLogger(EstudianteTest.class.getName());
 
     /**
-     * test para verificar que los datos de un empleado no sean nulos
+     * test para verificar que los datos de un estudiante no sean nulos
      */
     @Test
-    public void datosNulosEmpleado(){
+    public void datosNulosEstudiante(){
         LOG.info("iniciando test datos nulos");
         assertThrows(Throwable.class, ()-> new Estudiante(null, null, null, null));
         LOG.info("finalizando test datos nulos");
     }
 
     /**
-     * test para  verificar que los datos de un empleado no esten vacios
+     * test para  verificar que los datos de un estudiante no esten vacios
      */
     @Test
-    public void datosCompletosEmpleado(){
+    public void datosCompletosEstudiante(){
         LOG.info("iniciando test datos vacios");
         Estudiante estudiante = new Estudiante("miguel", "1115183022", "3176927081", "miguelito@gmail.com");
         assertEquals("miguel", estudiante.getNombre());
