@@ -19,11 +19,6 @@ public class App {
     public static void main(String[] args) {
         
         Biblioteca biblioteca = new Biblioteca("uniquindio");
-
-        /** 
-        Prestamo prestamo = new Prestamo(5000, "3456", LocalDate.of(2024, 10, 02), LocalDate.of(2024, 11, 02), nuevoEstudiante, Empleado empleado, Libro libro);
-        */
-
     
         int opcion = 0;
 
